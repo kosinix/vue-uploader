@@ -1,0 +1,45 @@
+{
+  "name": "vue-uploader",
+  "version": "1.0.0",
+  "description": "Multi-instance uploader for Vue.js that is compatible with Bootstrap 4",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "./node_modules/.bin/nodemon index.js",
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kosinix/vue-uploader.git"
+  },
+  "keywords": [
+    "upload",
+    "vue"
+  ],
+  "author": {
+    "name": "Nico Amarilla",
+    "url": "https://www.kosinix.com"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kosinix/vue-uploader/issues"
+  },
+  "homepage": "https://github.com/kosinix/vue-uploader#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "body-parser": "^1.19.0",
+    "chai": "^4.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.7-alpha.3",
+    "guess-file-type": "^1.0.1",
+    "lodash": "^4.17.15",
+    "mocha": "^7.1.2",
+    "nodemon": "^2.0.3",
+    "nunjucks": "^3.2.1"
+  }
+}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <title>Vue Uploader</title>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 ml-auto mr-auto">
+                <h1>Upload Test</h1>
+                <form v-on:submit.prevent="onSubmit" id="formUpload" v-cloak action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <vue-uploader ref="uploader1" v-on:file-added="onFileAdded" v-on:file-uploaded="onFileUploaded" v-on:file-error="onFileError" v-on:upload-complete="onUploadComplete" id="photo" name="photo" url="/upload" multiple="true" max="10" accept="image/png,image/jpeg,application/pdf" v-bind:default-files="files"></vue-uploader>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success">Submit</button>
+                    </div>
+                    <div class="form-group">
+                        <textarea v-model="logs" class="form-control" style="height:1000px"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script> <!-- Contains Popper.js already -->
+    <script src="/js/vue.js"></script>
+    <script src="/js/vue-uploader.js"></script>
+    <script>
+        Vue.component('vue-uploader', VueUploader.ajax); // Use the ajax bootstrap compat component
+        var v = new Vue({
+            el: "#formUpload",
+            delimiters: ["${", "}"],
+            data: {
+                files: [
+                    "/7fefaad27aaf699f92fd1a479535a706485aafabe687a220fff8193747b9bf10.jpg"
+                ],
+                logs:"",
+            },
+            methods: {
+                onSubmit: function(){
+                    this.$refs.uploader1.uploadBatch();
+                },
+                onFileAdded: function(file, uploader){
+                    this.logs += "File added "+file.name+"\n";
+                },
+                onFileUploaded: function(file, uploader){
+                    this.logs += "File uploaded "+file.name+"\n";
+                },
+                onFileError: function(file, uploader, e){
+                    console.log(e);
+                    this.logs += "File error "+file.name+" "+"\n";
+                },
+                onUploadComplete: function(files, uploader){
+                    this.logs += "Upload complete "+uploader+"\n";
+                }
+            }
+        });
+        
+    </script>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <title>Vue Uploader</title>
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 ml-auto mr-auto">
+                <h1>Upload Test</h1>
+                <form id="app" ref="form" v-cloak v-on:submit.prevent="onSubmit" action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <vue-uploader ref="photo" id="photo" url="/upload" v-on:uploader-created="onUploaderCreated" v-on:files-change="onFilesChange" v-on:uploader-error="onUploaderError" v-on:file-added="onUploaderFileAdded" v-on:file-progress="onUploadFileProgress" v-on:file-error="onUploadFileError" v-on:file-uploaded="onUploadFileUploaded" v-on:upload-complete="onUploadComplete" v-on:status-change="onStatusChange" name="photo" label="Select File" max="4" file-size="10000000" multiple="true" accept="image/png,image/jpeg,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword" v-bind:default-files="[]"></vue-uploader>
+                    </div>
+                    <ul>
+                        <li v-bind:data-status="uploaderStatus">
+                            <strong>Status: </strong>
+                            <span>Ready</span>,
+                            <span>Queued</span>,
+                            <span>Uploading</span>,
+                            <span>Error</span>
+                        </li>
+                        <li v-if="files.length > 0">
+                            <strong>Files: </strong>
+                            <ul>
+                                <li v-for="file in files">${file.status} - ${file.name}  - ${file.percent} %</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <div class="form-group">
+                        <label for="other">Another Field</label>
+                        <input id="other" value="This field can be combined with the upload field" type="text" name="other" class="form-control">
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button class="btn btn-success btn-full-width btn-lg">Submit</button>
+                    </div>
+                </form>
+
+                <div class="pt-5">
+                    <h2>Behavior</h2>
+                    <p>If form action url is the same as the uploader url, make sure to finish the upload first before submitting the form:</p>
+
+                    <pre>
+&lt;form <strong>action="/upload"</strong> ref="form" v-on:submit.prevent="onSubmit" method="POST" enctype="multipart/form-data">
+
+...
+
+&lt;vue-uploader <strong>url="/upload"</strong> ref="photo" id="photo" v-on:upload-complete="onUploadComplete">&lt;/vue-uploader>
+
+...
+
+onUploadComplete: function(file, uploader, e, response){
+    var me = this;
+    me.$refs.form.submit();
+},
+...
+onSubmit: function(){
+    var me = this;
+    me.$nextTick(function() {
+        if(me.$refs.photo.status === 'queued'){ // queued means there are files selected
+            me.$refs.photo.upload();
+        } else {
+            me.$refs.form.submit(); // otherwise just submit the form
+        }
+    });
+}
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script> <!-- Contains Popper.js already -->
+    <script src="/js/vue.js"></script>
+    <script src="/js/vue-uploader-ajax.js"></script>
+    <script>
+        var app = new Vue({
+            components: {
+                'vue-uploader': VueUploader.ajax, // Register component
+            },
+            el: "#app",
+            delimiters: ["${", "}"],
+            data: {
+                files: [],
+                uploaderStatus: ''
+            },
+            methods: {
+                onStatusChange: function(status){
+                    this.uploaderStatus = status
+                },
+                onFilesChange: function(files){
+                    this.files = files
+                    //console.log('files-change', files)
+                },
+                onUploaderCreated: function(e){
+                    //console.log('uploader-created', e)
+                },
+                onUploaderError: function(error, uploader){
+                    alert(error.message)
+                    //console.error('uploader-error', error.code, uploader)
+                },
+                onUploaderFileAdded: function(file, uploaderState){
+                    //console.log('file-added', file, uploaderState)
+                    this.files.push(file)
+                },
+                onUploadFileProgress: function(file, uploader, e){
+                    //console.log('file-progress', file, uploader, e)
+                    this.files = this.files.map(function (f) {
+                        if(f.uid === file.uid){
+                            return file
+                        }
+                        return f
+                    })
+                },
+                onUploadFileError: function(file, uploader, e){
+                    //console.log('file-error', e)
+                    alert('Failed to upload ' + file.name )
+                },
+                onUploadFileUploaded: function(file, uploader, e, response){
+                    //console.log('file-uploaded', file, uploader, e, response)
+                },
+                onUploadComplete: function(file, uploader, e, response){
+                    var me = this;
+                    {# me.$refs.form.submit(); #}
+                },
+                onSubmit: function(){
+                    var me = this;
+                    me.$nextTick(function() {
+                        me.pending = true;
+                        if(me.$refs.photo.status === 'queued'){
+                            me.$refs.photo.upload();
+                        } else {
+                            me.$refs.form.submit();
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Vue Uploader</title>
+  </head>
+  <body>
+    <h1>Upload Test</h1>
+    <form id="formUpload" v-cloak action="/upload" method="POST" enctype="multipart/form-data">
+        <vue-uploader id="photo" name="photo" url="/upload" multiple="true" max="2" accept="image/*" v-bind:default-files="files"></vue-uploader>
+        <button>Submit</button>
+    </form>
+    <ul>
+        <li><a href="/">Bootstrap Example</a></li>
+    </ul>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script> <!-- Contains Popper.js already -->
+    <script src="/js/vue.js"></script>
+    <script src="/js/vue-uploader.js"></script>
+    <script>
+        Vue.component('vue-uploader', VueUploader.nonAjaxComponent); // Use the non-ajax component
+        var v = new Vue({
+            el: "#formUpload",
+            delimiters: ["${", "}"],
+            data: {
+                files: [
+                    "http://localhost:8000/7fefaad27aaf699f92fd1a479535a706485aafabe687a220fff8193747b9bf10.jpg"
+                ]
+            }
+        });
+        
+    </script>
+  </body>
+</html>

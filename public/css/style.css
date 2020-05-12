@@ -1,0 +1,36 @@
+
+h1 {
+    font-size: 24px;
+}
+h2 {
+    font-size: 18px;
+}
+h3 {
+    font-size: 16px;
+}
+h4 {
+    font-size: 14px;
+}
+h5 {
+    font-size: 13px;
+}
+h6 {
+    font-size: 12px;
+}
+
+[data-status="ready"] :nth-child(2){
+    font-weight: bold;
+    color: green;
+}
+[data-status="queued"] :nth-child(3){
+    font-weight: bold;
+    color: green;
+}
+[data-status="uploading"] :nth-child(4){
+    font-weight: bold;
+    color: green;
+}
+[data-status="error"] :nth-child(5){
+    font-weight: bold;
+    color: red;
+}
